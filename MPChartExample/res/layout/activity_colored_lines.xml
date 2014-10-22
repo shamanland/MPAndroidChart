@@ -1,25 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <com.github.mikephil.charting.charts.LineChart
+    <com.github.mikephil.charting.view.ChartView
+        app:chartType="line"
         android:id="@+id/chart1"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    <com.github.mikephil.charting.charts.LineChart
+
+    <com.github.mikephil.charting.view.ChartView
+        app:chartType="line"
         android:id="@+id/chart2"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    <com.github.mikephil.charting.charts.LineChart
+
+    <com.github.mikephil.charting.view.ChartView
+        app:chartType="line"
         android:id="@+id/chart3"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    <com.github.mikephil.charting.charts.LineChart
+
+    <com.github.mikephil.charting.view.ChartView
+        app:chartType="line"
         android:id="@+id/chart4"
         android:layout_weight="1"
         android:layout_width="match_parent"
