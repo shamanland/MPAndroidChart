@@ -11,6 +11,7 @@ import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
+import com.github.mikephil.charting.view.ChartView;
 import com.xxmassdeveloper.mpchartexample.R;
 
 public class PieChartItem extends ChartItem {
@@ -39,7 +40,8 @@ public class PieChartItem extends ChartItem {
 
             convertView = LayoutInflater.from(c).inflate(
                     R.layout.list_item_piechart, null);
-            holder.chart = (PieChart) convertView.findViewById(R.id.chart);
+            holder.chartView = (ChartView) convertView.findViewById(R.id.chart);
+            holder.chart = (PieChart) holder.chartView.getChart();
 
             convertView.setTag(holder);
 
@@ -72,6 +74,7 @@ public class PieChartItem extends ChartItem {
     }
 
     private static class ViewHolder {
+        ChartView chartView;
         PieChart chart;
     }
 }

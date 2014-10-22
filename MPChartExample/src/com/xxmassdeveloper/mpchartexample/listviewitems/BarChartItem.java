@@ -11,6 +11,7 @@ import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
 import com.github.mikephil.charting.utils.YLabels;
+import com.github.mikephil.charting.view.ChartView;
 import com.xxmassdeveloper.mpchartexample.R;
 
 public class BarChartItem extends ChartItem {
@@ -39,7 +40,8 @@ public class BarChartItem extends ChartItem {
 
             convertView = LayoutInflater.from(c).inflate(
                     R.layout.list_item_barchart, null);
-            holder.chart = (BarChart) convertView.findViewById(R.id.chart);
+            holder.chartView = (ChartView) convertView.findViewById(R.id.chart);
+            holder.chart = (BarChart) holder.chartView.getChart();
 
             convertView.setTag(holder);
 
@@ -74,6 +76,7 @@ public class BarChartItem extends ChartItem {
     }
     
     private static class ViewHolder {
+        ChartView chartView;
         BarChart chart;
     }
 }

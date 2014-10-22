@@ -14,6 +14,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarLineScatterCandleData;
@@ -75,13 +76,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
     /** offset that allows the chart to be dragged over its bounds on the x-axis */
     private float mTransOffsetY = 0f;
 
-    /**
-     * flag that indicates if pinch-zoom is enabled. if true, both x and y axis
-     * can be scaled with 2 fingers, if false, x and y axis can be scaled
-     * separately
-     */
-    protected boolean mPinchZoomEnabled = false;
-
     /** flat that indicates if double tap zoom is enabled or not */
     protected boolean mDoubleTapToZoomEnabled = true;
 
@@ -93,12 +87,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
 
     /** if true, the y range is predefined */
     protected boolean mFixedYValues = false;
-
-    /** if true, the y-label entries will always start at zero */
-    protected boolean mStartAtZero = true;
-
-    /** if true, data filtering is enabled */
-    protected boolean mFilterData = false;
 
     /** paint object for the grid lines */
     protected Paint mGridPaint;
@@ -148,18 +136,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
     // /** the approximator object used for data filtering */
     // private Approximator mApproximator;
 
-    public BarLineChartBase(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
-    public BarLineChartBase(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public BarLineChartBase(Context context) {
-        super(context);
-    }
-
     @Override
     protected void init() {
         super.init();
@@ -184,8 +160,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
         // grey
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
+    public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         if (mDataNotSet)
@@ -194,7 +169,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
         long starttime = System.currentTimeMillis();
 
         // if data filtering is enabled
-        if (mFilterData) {
+        if (isFilteringEnabled()) {
             mCurrentData = getFilteredData();
 
             Log.i(LOG_TAG, "FilterTime: " + (System.currentTimeMillis() -
@@ -279,8 +254,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
      * Sets up all the matrices that will be used for scaling the coordinates to
      * the display. Offset and Value-px.
      */
-    private void prepareMatrix() {
-
+    public void prepareMatrix() {
         prepareMatrixValuePx();
 
         prepareMatrixOffset();
@@ -497,8 +471,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
                     space = Math.abs(mYChartMax / 100f * 15f);
             }
 
-            if (mStartAtZero) {
-
+            if (isStartAtZeroEnabled()) {
                 if (mYChartMax < 0) {
                     mYChartMax = 0;
                     // calc delta
@@ -560,7 +533,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
                 yMax = (float) p1.y;
             } else {
 
-                if (!mStartAtZero)
+                if (!isStartAtZeroEnabled())
                     yMin = (float) Math.min(p1.y, p2.y);
                 else
                     yMin = 0;
@@ -574,7 +547,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
                 yMax = mYChartMax;
             } else {
 
-                if (!mStartAtZero)
+                if (!isStartAtZeroEnabled())
                     yMin = (float) Math.min(mYChartMax, mYChartMin);
                 else
                     yMin = 0;
@@ -987,9 +960,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
     /**
      * returns true if the specified point (x-axis) exceeds the limits of what
      * is visible to the right side
-     * 
-     * @param v
-     * @return
      */
     protected boolean isOffContentRight(float p) {
         if (p > mContentRect.right)
@@ -1001,9 +971,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
     /**
      * returns true if the specified point (x-axis) exceeds the limits of what
      * is visible to the left side
-     * 
-     * @param v
-     * @return
      */
     protected boolean isOffContentLeft(float p) {
         if (p < mContentRect.left)
@@ -1015,9 +982,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
     /**
      * returns true if the specified point (y-axis) exceeds the limits of what
      * is visible on the top
-     * 
-     * @param v
-     * @return
      */
     protected boolean isOffContentTop(float p) {
         if (p < mContentRect.top)
@@ -1029,9 +993,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
     /**
      * returns true if the specified point (y-axis) exceeds the limits of what
      * is visible on the bottom
-     * 
-     * @param v
-     * @return
      */
     protected boolean isOffContentBottom(float p) {
         if (p > mContentRect.bottom)
@@ -1041,12 +1002,10 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
     }
 
     /** touchlistener that handles touches and gestures on the chart */
-    protected OnTouchListener mListener;
+    protected View.OnTouchListener mListener;
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        super.onTouchEvent(event);
-
+    public boolean onTouch(View v, MotionEvent event) {
         if (mListener == null || mDataNotSet)
             return false;
 
@@ -1054,7 +1013,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
         if (!mTouchEnabled)
             return false;
         else
-            return mListener.onTouch(this, event);
+            return mListener.onTouch(v, event);
     }
 
     /**
@@ -1219,7 +1178,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
         limitTransAndScale(mMatrixTouch);
 
         // redraw
-        invalidate();
+        // FIXME
+        // invalidate();
 
         newTouchMatrix.set(mMatrixTouch);
         return newTouchMatrix;
@@ -1288,7 +1248,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
      * 
      * @param l
      */
-    public void setOnTouchListener(OnTouchListener l) {
+    public void setOnTouchListener(View.OnTouchListener l) {
         this.mListener = l;
     }
 
@@ -1393,14 +1353,16 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
         mYChartMin = minY;
         mYChartMax = maxY;
         if (minY < 0) {
-            mStartAtZero = false;
+            setStartAtZero(false);
         }
         mDeltaY = mYChartMax - mYChartMin;
 
         calcFormats();
         prepareMatrix();
-        if (invalidate)
-            invalidate();
+        if (invalidate) {
+            // FIXME
+            // invalidate();
+        }
     }
 
     /**
@@ -1415,8 +1377,10 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
         calcMinMax(mFixedYValues);
 
         prepareMatrix();
-        if (invalidate)
-            invalidate();
+        if (invalidate) {
+            // FIXME
+            // invalidate();
+        }
     }
 
     /**
@@ -1486,26 +1450,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
      */
     public void setHighlightIndicatorEnabled(boolean enabled) {
         mHighLightIndicatorEnabled = enabled;
-    }
-
-    /**
-     * enable this to force the y-axis labels to always start at zero
-     * 
-     * @param enabled
-     */
-    public void setStartAtZero(boolean enabled) {
-        this.mStartAtZero = enabled;
-        prepare();
-        prepareMatrix();
-    }
-
-    /**
-     * returns true if the chart is set to start at zero, false otherwise
-     * 
-     * @return
-     */
-    public boolean isStartAtZeroEnabled() {
-        return mStartAtZero;
     }
 
     /**
@@ -1957,52 +1901,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
      */
     public XLabels getXLabels() {
         return mXLabels;
-    }
-
-    /**
-     * Enables data filtering for the chart data, filtering will use the user
-     * customized Approximator handed over to this method.
-     * 
-     * @param a
-     */
-    public void enableFiltering(Approximator a) {
-        mFilterData = true;
-        // mApproximator = a;
-    }
-
-    /**
-     * Disables data filtering for the chart.
-     */
-    public void disableFiltering() {
-        mFilterData = false;
-    }
-
-    /**
-     * returns true if data filtering is enabled, false if not
-     * 
-     * @return
-     */
-    public boolean isFilteringEnabled() {
-        return mFilterData;
-    }
-
-    /**
-     * if set to true, both x and y axis can be scaled with 2 fingers, if false,
-     * x and y axis can be scaled separately. default: false
-     * 
-     * @param enabled
-     */
-    public void setPinchZoom(boolean enabled) {
-        mPinchZoomEnabled = enabled;
-    }
-
-    /**
-     * returns true if pinch-zoom is enabled, false if not
-     * 
-     * @return
-     */
-    public boolean isPinchZoomEnabled() {
-        return mPinchZoomEnabled;
     }
 
     /**

@@ -20,6 +20,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
 import com.github.mikephil.charting.utils.YLabels;
+import com.github.mikephil.charting.view.ChartView;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
 import java.util.ArrayList;
@@ -76,7 +77,8 @@ public class ListViewBarChartActivity extends DemoBase {
 
                 convertView = LayoutInflater.from(getContext()).inflate(
                         R.layout.list_item_barchart, null);
-                holder.chart = (BarChart) convertView.findViewById(R.id.chart);
+                holder.chartView = (ChartView) convertView.findViewById(R.id.chart);
+                holder.chart = (BarChart) holder.chartView.getChart();
 
                 convertView.setTag(holder);
 
@@ -111,7 +113,7 @@ public class ListViewBarChartActivity extends DemoBase {
         }
 
         private class ViewHolder {
-
+            ChartView chartView;
             BarChart chart;
         }
     }

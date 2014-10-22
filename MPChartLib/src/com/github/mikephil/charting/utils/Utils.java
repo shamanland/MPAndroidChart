@@ -1,7 +1,7 @@
 
 package com.github.mikephil.charting.utils;
 
-import android.content.res.Resources;
+import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
@@ -15,25 +15,34 @@ import java.util.ArrayList;
  * calling Utils.init(...) before usage. Inside the Chart.init() method, this is
  * done, if the Utils are used before that, Utils.init(...) needs to be called
  * manually.
- * 
+ *
  * @author Philipp Jahoda
  */
 public abstract class Utils {
 
-    private static DisplayMetrics mMetrics;
+    private static DisplayMetrics sMetrics;
+    private static Context sContext;
 
     /**
      * initialize method, called inside the Chart.init() method.
-     * 
-     * @param res
      */
-    public static void init(Resources res) {
-        mMetrics = res.getDisplayMetrics();
+    public static void init(Context context) {
+        if (sContext == null) {
+            sContext = context.getApplicationContext();
+        }
+
+        if (sMetrics == null) {
+            sMetrics = sContext.getResources().getDisplayMetrics();
+        }
+    }
+
+    public static Context getContext() {
+        return sContext;
     }
 
     /**
      * format a number properly with the given number of digits
-     * 
+     *
      * @param number the number to format
      * @param digits the number of digits
      * @return
@@ -56,15 +65,15 @@ public abstract class Utils {
     /**
      * This method converts dp unit to equivalent pixels, depending on device
      * density. NEEDS UTILS TO BE INITIALIZED BEFORE USAGE.
-     * 
+     *
      * @param dp A value in dp (density independent pixels) unit. Which we need
-     *            to convert into pixels
+     *           to convert into pixels
      * @return A float value to represent px equivalent to dp depending on
-     *         device density
+     * device density
      */
     public static float convertDpToPixel(float dp) {
 
-        if (mMetrics == null) {
+        if (sMetrics == null) {
 
             Log.e("MPChartLib-Utils",
                     "Utils NOT INITIALIZED. You need to call Utils.init(...) at least once before calling Utils.convertDpToPixel(...). Otherwise conversion does not take place.");
@@ -73,7 +82,7 @@ public abstract class Utils {
             // "Utils NOT INITIALIZED. You need to call Utils.init(...) at least once before calling Utils.convertDpToPixel(...).");
         }
 
-        DisplayMetrics metrics = mMetrics;
+        DisplayMetrics metrics = sMetrics;
         float px = dp * (metrics.densityDpi / 160f);
         return px;
     }
@@ -81,13 +90,13 @@ public abstract class Utils {
     /**
      * This method converts device specific pixels to density independent
      * pixels. NEEDS UTILS TO BE INITIALIZED BEFORE USAGE.
-     * 
+     *
      * @param px A value in px (pixels) unit. Which we need to convert into db
      * @return A float value to represent dp equivalent to px value
      */
     public static float convertPixelsToDp(float px) {
 
-        if (mMetrics == null) {
+        if (sMetrics == null) {
 
             Log.e("MPChartLib-Utils",
                     "Utils NOT INITIALIZED. You need to call Utils.init(...) at least once before calling Utils.convertPixelsToDp(...). Otherwise conversion does not take place.");
@@ -96,7 +105,7 @@ public abstract class Utils {
             // "Utils NOT INITIALIZED. You need to call Utils.init(...) at least once before calling Utils.convertPixelsToDp(...).");
         }
 
-        DisplayMetrics metrics = mMetrics;
+        DisplayMetrics metrics = sMetrics;
         float dp = px / (metrics.densityDpi / 160f);
         return dp;
     }
@@ -104,7 +113,7 @@ public abstract class Utils {
     /**
      * calculates the approximate width of a text, depending on a demo text
      * avoid repeated calls (e.g. inside drawing methods)
-     * 
+     *
      * @param paint
      * @param demoText
      * @return
@@ -116,7 +125,7 @@ public abstract class Utils {
     /**
      * calculates the approximate height of a text, depending on a demo text
      * avoid repeated calls (e.g. inside drawing methods)
-     * 
+     *
      * @param paint
      * @param demoText
      * @return
@@ -153,10 +162,8 @@ public abstract class Utils {
 
     /**
      * returns the appropriate number of format digits for a legend value
-     * 
-     * @param delta
+     *
      * @param bonus - additional digits
-     * @return
      */
     public static int getLegendFormatDigits(float step, int bonus) {
 
@@ -188,11 +195,6 @@ public abstract class Utils {
     /**
      * Formats the given number to the given number of decimals, and returns the
      * number as a string, maximum 35 characters.
-     * 
-     * @param number
-     * @param digitCount
-     * @param separateTousands set this to true to separate thousands values
-     * @return
      */
     public static String formatNumber(float number, int digitCount, boolean separateThousands) {
 
@@ -275,7 +277,7 @@ public abstract class Utils {
 
     /**
      * rounds the given number to the next significant number
-     * 
+     *
      * @param number
      * @return
      */
@@ -290,7 +292,7 @@ public abstract class Utils {
     /**
      * Returns the appropriate number of decimals to be used for the provided
      * number.
-     * 
+     *
      * @param number
      * @return
      */
@@ -302,7 +304,7 @@ public abstract class Utils {
 
     /**
      * Converts the provided Integer ArrayList to an int array.
-     * 
+     *
      * @param integers
      * @return
      */
@@ -319,9 +321,6 @@ public abstract class Utils {
 
     /**
      * Converts the provided String ArrayList to a String array.
-     * 
-     * @param labels
-     * @return
      */
     public static String[] convertStrings(ArrayList<String> strings) {
 
@@ -337,7 +336,7 @@ public abstract class Utils {
     /**
      * Replacement for the Math.nextUp(...) method that is only available in
      * HONEYCOMB and higher.
-     * 
+     *
      * @param d
      * @return
      */
@@ -354,7 +353,7 @@ public abstract class Utils {
     /**
      * Returns the index of the DataSet that contains the closest value on the
      * y-axis. This is needed for highlighting.
-     * 
+     *
      * @param valsAtIndex all the values at a specific index
      * @return
      */

@@ -12,6 +12,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
 import com.github.mikephil.charting.utils.YLabels;
+import com.github.mikephil.charting.view.ChartView;
 import com.xxmassdeveloper.mpchartexample.R;
 
 public class LineChartItem extends ChartItem {
@@ -40,7 +41,8 @@ public class LineChartItem extends ChartItem {
 
             convertView = LayoutInflater.from(c).inflate(
                     R.layout.list_item_linechart, null);
-            holder.chart = (LineChart) convertView.findViewById(R.id.chart);
+            holder.chartView = (ChartView) convertView.findViewById(R.id.chart);
+            holder.chart = (LineChart) holder.chartView.getChart();
 
             convertView.setTag(holder);
 
@@ -75,6 +77,7 @@ public class LineChartItem extends ChartItem {
     }
 
     private static class ViewHolder {
+        ChartView chartView;
         LineChart chart;
     }
 }

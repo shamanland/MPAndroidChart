@@ -18,6 +18,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.LimitLine;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.YLabels;
+import com.github.mikephil.charting.view.ChartView;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
 import java.util.ArrayList;
@@ -33,7 +34,8 @@ public class RadarChartActivitry extends DemoBase {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_radarchart);
 
-        mChart = (RadarChart) findViewById(R.id.chart1);
+        mChartView = (ChartView) findViewById(R.id.chart1);
+        mChart = (RadarChart) mChartView.getChart();
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
 
@@ -87,81 +89,6 @@ public class RadarChartActivitry extends DemoBase {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.actionToggleValues: {
-                if (mChart.isDrawYValuesEnabled())
-                    mChart.setDrawYValues(false);
-                else
-                    mChart.setDrawYValues(true);
-                mChart.invalidate();
-                break;
-            }
-            case R.id.actionToggleHighlight: {
-                if (mChart.isHighlightEnabled())
-                    mChart.setHighlightEnabled(false);
-                else
-                    mChart.setHighlightEnabled(true);
-                mChart.invalidate();
-                break;
-            }
-            case R.id.actionToggleRotate: {
-                if (mChart.isRotationEnabled())
-                    mChart.setRotationEnabled(false);
-                else
-                    mChart.setRotationEnabled(true);
-                mChart.invalidate();
-                break;
-            }
-            case R.id.actionToggleFilled: {
-
-                ArrayList<RadarDataSet> sets = (ArrayList<RadarDataSet>) mChart.getDataCurrent()
-                        .getDataSets();
-
-                for (RadarDataSet set : sets) {
-                    if (set.isDrawFilledEnabled())
-                        set.setDrawFilled(false);
-                    else
-                        set.setDrawFilled(true);
-                }
-                mChart.invalidate();
-                break;
-            }
-            case R.id.actionSave: {
-                if (mChart.saveToPath("title" + System.currentTimeMillis(), "")) {
-                    Toast.makeText(getApplicationContext(), "Saving SUCCESSFUL!",
-                            Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(getApplicationContext(), "Saving FAILED!", Toast.LENGTH_SHORT)
-                            .show();
-                break;
-            }
-            case R.id.actionToggleXLabels: {
-                if (mChart.isDrawXLabelsEnabled())
-                    mChart.setDrawXLabels(false);
-                else
-                    mChart.setDrawXLabels(true);
-                mChart.invalidate();
-                break;
-            }
-            case R.id.actionToggleYLabels: {
-                if (mChart.isDrawYLabelsEnabled())
-                    mChart.setDrawYLabels(false);
-                else
-                    mChart.setDrawYLabels(true);
-                mChart.invalidate();
-                break;
-            }
-            case R.id.actionToggleSpin: {
-                mChart.spin(2000, mChart.getRotationAngle(), mChart.getRotationAngle() + 360);
-                break;
-            }
-        }
-        return true;
-    }
-
     private String[] mParties = new String[] {
             "Party A", "Party B", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
             "Party I"
@@ -211,7 +138,6 @@ public class RadarChartActivitry extends DemoBase {
 
         // undo all highlights
         mChart.highlightValues(null);
-
-        mChart.invalidate();
+        mChartView.invalidate();
     }
 }

@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.YLabels;
+import com.github.mikephil.charting.view.ChartView;
 import com.xxmassdeveloper.mpchartexample.MyMarkerView;
 import com.xxmassdeveloper.mpchartexample.R;
 
@@ -20,16 +21,21 @@ public class BarChartFrag extends SimpleFragment {
         return new BarChartFrag();
     }
 
+    private ChartView mChartView;
     private BarChart mChart;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.frag_simple_bar, container, false);
-        
+
+        mChartView = new ChartView(getActivity());
+
         // create a new chart object
-        mChart = new BarChart(getActivity());
+        mChart = new BarChart();
         mChart.setDescription("");
-        
+
+        mChartView.setChart(mChart);
+
         MyMarkerView mv = new MyMarkerView(getActivity(), R.layout.custom_marker_view);
         mv.setOffsets(-mv.getMeasuredWidth() / 2, -mv.getMeasuredHeight());
 
@@ -58,7 +64,7 @@ public class BarChartFrag extends SimpleFragment {
         
         // programatically add the chart
         FrameLayout parent = (FrameLayout) v.findViewById(R.id.parentLayout);
-        parent.addView(mChart);
+        parent.addView(mChartView);
         
         return v;
     }

@@ -26,18 +26,6 @@ public class LineChart extends BarLineChartBase<LineData> {
     /** paint for the inner circle of the value indicators */
     protected Paint mCirclePaintInner;
 
-    public LineChart(Context context) {
-        super(context);
-    }
-
-    public LineChart(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public LineChart(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
     @Override
     protected void init() {
         super.init();

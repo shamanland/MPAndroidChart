@@ -14,12 +14,14 @@ import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendForm;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.YLabels;
+import com.github.mikephil.charting.view.ChartView;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
 import java.util.ArrayList;
 
 public class LineChartActivityColored extends DemoBase {
 
+    private ChartView[] mChartViews = new ChartView[4];
     private LineChart[] mCharts = new LineChart[4];
     private Typeface mTf;
 
@@ -30,10 +32,14 @@ public class LineChartActivityColored extends DemoBase {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_colored_lines);
 
-        mCharts[0] = (LineChart) findViewById(R.id.chart1);
-        mCharts[1] = (LineChart) findViewById(R.id.chart2);
-        mCharts[2] = (LineChart) findViewById(R.id.chart3);
-        mCharts[3] = (LineChart) findViewById(R.id.chart4);
+        mChartViews[0] = (ChartView) findViewById(R.id.chart1);
+        mChartViews[1] = (ChartView) findViewById(R.id.chart2);
+        mChartViews[2] = (ChartView) findViewById(R.id.chart3);
+        mChartViews[3] = (ChartView) findViewById(R.id.chart4);
+        mCharts[0] = (LineChart) mChartViews[0].getChart();
+        mCharts[1] = (LineChart) mChartViews[1].getChart();
+        mCharts[2] = (LineChart) mChartViews[2].getChart();
+        mCharts[3] = (LineChart) mChartViews[3].getChart();
 
         mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Bold.ttf");
 
@@ -41,7 +47,7 @@ public class LineChartActivityColored extends DemoBase {
 
         for (int i = 0; i < mCharts.length; i++)
             // add some transparency to the color with "& 0x90FFFFFF"
-            setupChart(mCharts[i], data, mColors[i % mColors.length]);
+            setupChart(mChartViews[i], mCharts[i], data, mColors[i % mColors.length]);
     }
 
     private int[] mColors = new int[] {
@@ -51,7 +57,7 @@ public class LineChartActivityColored extends DemoBase {
             Color.rgb(250, 104, 104)
     };
 
-    private void setupChart(LineChart chart, LineData data, int color) {
+    private void setupChart(ChartView chartView, LineChart chart, LineData data, int color) {
 
         // if enabled, the chart will always start at zero on the y-axis
         chart.setStartAtZero(true);
@@ -84,7 +90,7 @@ public class LineChartActivityColored extends DemoBase {
         // if disabled, scaling can be done on x- and y-axis separately
         chart.setPinchZoom(false);
 
-        chart.setBackgroundColor(color);
+        chartView.setBackgroundColor(color);
 
         chart.setValueTypeface(mTf);
 

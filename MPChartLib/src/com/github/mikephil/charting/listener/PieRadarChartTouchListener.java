@@ -38,7 +38,7 @@ public class PieRadarChartTouchListener extends SimpleOnGestureListener implemen
     public PieRadarChartTouchListener(PieRadarChartBase ctx) {
         this.mChart = ctx;
 
-        mGestureDetector = new GestureDetector(ctx.getContext(), this);
+        mGestureDetector = new GestureDetector(Utils.getContext(), this);
     }
 
     @Override
@@ -68,7 +68,8 @@ public class PieRadarChartTouchListener extends SimpleOnGestureListener implemen
                         mChart.disableScroll();
                     } else if (mTouchMode == ROTATE) {
                         mChart.updateRotation(x, y);
-                        mChart.invalidate();
+                        // FIXME
+                        // mChart.invalidate();
                     }
 
                     break;

@@ -33,12 +33,6 @@ public class BarChart extends BarLineChartBase<BarData> {
     /** indicates how much the 3d effect goes back */
     private float mDepth = 0.3f;
 
-    /** flag the enables or disables 3d bars */
-    private boolean m3DEnabled = false;
-
-    /** flag that enables or disables the highlighting arrow */
-    private boolean mDrawHighlightArrow = false;
-
     /**
      * if set to true, all values are drawn above their bars, instead of below
      * their top
@@ -62,18 +56,6 @@ public class BarChart extends BarLineChartBase<BarData> {
 
     /** the rect object that is used for drawing the bars */
     private RectF mBarRect = new RectF();
-
-    public BarChart(Context context) {
-        super(context);
-    }
-
-    public BarChart(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public BarChart(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
 
     @Override
     protected void init() {
@@ -149,8 +131,7 @@ public class BarChart extends BarLineChartBase<BarData> {
 
                 mDrawCanvas.drawRect(mBarRect, mHighlightPaint);
 
-                if (mDrawHighlightArrow) {
-
+                if (isDrawHighlightArrowEnabled()) {
                     mHighlightPaint.setAlpha(255);
 
                     // distance between highlight arrow and bar
@@ -471,10 +452,6 @@ public class BarChart extends BarLineChartBase<BarData> {
 
     /**
      * Draws a value at the specified x and y position.
-     * 
-     * @param value
-     * @param xPos
-     * @param yPos
      */
     private void drawValue(float val, float xPos, float yPos) {
         
@@ -557,10 +534,6 @@ public class BarChart extends BarLineChartBase<BarData> {
     /**
      * Returns the bounding box of the specified Entry in the specified DataSet.
      * Returns null if the Entry could not be found in the charts data.
-     * 
-     * @param e
-     * @param dataSetIndex
-     * @return
      */
     public RectF getBarBounds(BarEntry e) {
 
@@ -623,42 +596,6 @@ public class BarChart extends BarLineChartBase<BarData> {
      */
     public float getDepth() {
         return mDepth;
-    }
-
-    /**
-     * if enabled, chart will be drawn in 3d
-     * 
-     * @param enabled
-     */
-    public void set3DEnabled(boolean enabled) {
-        this.m3DEnabled = enabled;
-    }
-
-    /**
-     * returns true if 3d bars is enabled, false if not
-     * 
-     * @return
-     */
-    public boolean is3DEnabled() {
-        return m3DEnabled;
-    }
-
-    /**
-     * set this to true to draw the highlightning arrow
-     * 
-     * @param enabled
-     */
-    public void setDrawHighlightArrow(boolean enabled) {
-        mDrawHighlightArrow = enabled;
-    }
-
-    /**
-     * returns true if drawing the highlighting arrow is enabled, false if not
-     * 
-     * @return
-     */
-    public boolean isDrawHighlightArrowEnabled() {
-        return mDrawHighlightArrow;
     }
 
     /**

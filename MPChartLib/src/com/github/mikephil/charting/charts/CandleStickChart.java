@@ -17,19 +17,6 @@ import java.util.ArrayList;
  * @author Philipp Jahoda
  */
 public class CandleStickChart extends BarLineChartBase<CandleData> {
-
-    public CandleStickChart(Context context) {
-        super(context);
-    }
-
-    public CandleStickChart(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public CandleStickChart(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
     @Override
     protected void calcMinMax(boolean fixedValues) {
         super.calcMinMax(fixedValues);

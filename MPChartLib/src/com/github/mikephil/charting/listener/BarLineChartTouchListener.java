@@ -17,6 +17,7 @@ import com.github.mikephil.charting.data.BarLineScatterCandleRadarDataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Highlight;
+import com.github.mikephil.charting.utils.Utils;
 
 /**
  * TouchListener for Bar-, Line-, Scatter- and CandleStickChart with handles all
@@ -68,7 +69,7 @@ public class BarLineChartTouchListener<T extends BarLineChartBase<? extends BarL
         this.mChart = chart;
         this.mMatrix = start;
 
-        mGestureDetector = new GestureDetector(chart.getContext(), this);
+        mGestureDetector = new GestureDetector(Utils.getContext(), this);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -328,9 +329,6 @@ public class BarLineChartTouchListener<T extends BarLineChartBase<? extends BarL
     /**
      * returns the correct translation depending on the provided x and y touch
      * points
-     * 
-     * @param e
-     * @return
      */
     public PointF getTrans(float x, float y) {
 
@@ -339,7 +337,9 @@ public class BarLineChartTouchListener<T extends BarLineChartBase<? extends BarL
 
         // check if axis is inverted
         if (!mChart.isInvertYAxisEnabled()) {
-            yTrans = -(mChart.getMeasuredHeight() - y - mChart.getOffsetBottom());
+            // FIXME
+            // yTrans = -(mChart.getMeasuredHeight() - y - mChart.getOffsetBottom());
+            yTrans = -(mChart.getHeight() - y - mChart.getOffsetBottom());
         } else {
             yTrans = -(y - mChart.getOffsetTop());
         }

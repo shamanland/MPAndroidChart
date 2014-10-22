@@ -7,6 +7,7 @@ import android.graphics.PointF;
 import android.graphics.Paint.Align;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.DataSet;
@@ -31,19 +32,7 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends DataSet<? 
     private boolean mRotateEnabled = true;
 
     /** the pie- and radarchart touchlistener */
-    private OnTouchListener mListener;
-
-    public PieRadarChartBase(Context context) {
-        super(context);
-    }
-
-    public PieRadarChartBase(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public PieRadarChartBase(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
+    private View.OnTouchListener mListener;
 
     @Override
     protected void init() {
@@ -53,12 +42,12 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends DataSet<? 
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouch(View v, MotionEvent event) {
         // use the pie- and radarchart listener own listener
         if (mTouchEnabled && mListener != null)
-            return mListener.onTouch(this, event);
+            return mListener.onTouch(v, event);
         else
-            return super.onTouchEvent(event);
+            return false;
     }
 
     @Override
@@ -271,11 +260,6 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends DataSet<? 
     /**
      * Returns the distance of a certain point on the chart to the center of the
      * chart.
-     * 
-     * @param c the center
-     * @param x
-     * @param y
-     * @return
      */
     public float distanceToCenter(float x, float y) {
 
@@ -403,7 +387,7 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends DataSet<? 
      * 
      * @param l
      */
-    public void setOnTouchListener(OnTouchListener l) {
+    public void setOnTouchListener(View.OnTouchListener l) {
         this.mListener = l;
     }
 

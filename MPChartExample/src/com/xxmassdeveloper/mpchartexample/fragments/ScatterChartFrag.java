@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.github.mikephil.charting.charts.ScatterChart;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.YLabels;
+import com.github.mikephil.charting.view.ChartView;
 import com.xxmassdeveloper.mpchartexample.MyMarkerView;
 import com.xxmassdeveloper.mpchartexample.R;
 
@@ -19,13 +20,15 @@ public class ScatterChartFrag extends SimpleFragment {
         return new ScatterChartFrag();
     }
 
+    private ChartView mChartView;
     private ScatterChart mChart;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.frag_simple_scatter, container, false);
         
-        mChart = (ScatterChart) v.findViewById(R.id.scatterChart1);
+        mChartView = (ChartView) v.findViewById(R.id.scatterChart1);
+        mChart = (ScatterChart) mChartView.getChart();
         mChart.setDrawYValues(false);
         mChart.setDescription("");
         

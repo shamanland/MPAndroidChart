@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
+import com.github.mikephil.charting.view.ChartView;
 import com.xxmassdeveloper.mpchartexample.R;
 
 
@@ -18,13 +19,15 @@ public class PieChartFrag extends SimpleFragment {
         return new PieChartFrag();
     }
 
+    private ChartView mChartView;
     private PieChart mChart;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.frag_simple_pie, container, false);
         
-        mChart = (PieChart) v.findViewById(R.id.pieChart1);
+        mChartView = (ChartView) v.findViewById(R.id.pieChart1);
+        mChart = (PieChart) mChartView.getChart();
         mChart.setDescription("");
         
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");

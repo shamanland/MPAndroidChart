@@ -20,6 +20,7 @@ import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
+import com.github.mikephil.charting.view.ChartView;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
 import java.util.ArrayList;
@@ -49,7 +50,8 @@ public class PieChartActivity extends DemoBase implements OnSeekBarChangeListene
         mSeekBarX.setOnSeekBarChangeListener(this);
         mSeekBarY.setOnSeekBarChangeListener(this);
 
-        mChart = (PieChart) findViewById(R.id.chart1);
+        mChartView = (ChartView) findViewById(R.id.chart1);
+        mChart = (PieChart) mChartView.getChart();
 
         // change the color of the center-hole
         mChart.setHoleColor(Color.rgb(235, 235, 235));
@@ -102,71 +104,6 @@ public class PieChartActivity extends DemoBase implements OnSeekBarChangeListene
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.pie, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.actionToggleValues: {
-                if (mChart.isDrawYValuesEnabled())
-                    mChart.setDrawYValues(false);
-                else
-                    mChart.setDrawYValues(true);
-                mChart.invalidate();
-                break;
-            }
-            case R.id.actionTogglePercent: {
-                if (mChart.isUsePercentValuesEnabled())
-                    mChart.setUsePercentValues(false);
-                else
-                    mChart.setUsePercentValues(true);
-                mChart.invalidate();
-                break;
-            }
-            case R.id.actionToggleHole: {
-                if (mChart.isDrawHoleEnabled())
-                    mChart.setDrawHoleEnabled(false);
-                else
-                    mChart.setDrawHoleEnabled(true);
-                mChart.invalidate();
-                break;
-            }
-            case R.id.actionDrawCenter: {
-                if (mChart.isDrawCenterTextEnabled())
-                    mChart.setDrawCenterText(false);
-                else
-                    mChart.setDrawCenterText(true);
-                mChart.invalidate();
-                break;
-            }
-            case R.id.actionToggleXVals: {
-                if (mChart.isDrawXValuesEnabled())
-                    mChart.setDrawXValues(false);
-                else
-                    mChart.setDrawXValues(true);
-                mChart.invalidate();
-                break;
-            }
-            case R.id.actionSave: {
-                // mChart.saveToGallery("title"+System.currentTimeMillis());
-                mChart.saveToPath("title" + System.currentTimeMillis(), "");
-                break;
-            }
-            case R.id.animateX: {
-                mChart.animateX(1800);
-                break;
-            }
-            case R.id.animateY: {
-                mChart.animateY(1800);
-                break;
-            }
-            case R.id.animateXY: {
-                mChart.animateXY(1800, 1800);
-                break;
-            }
-        }
         return true;
     }
 
@@ -228,8 +165,7 @@ public class PieChartActivity extends DemoBase implements OnSeekBarChangeListene
 
         // undo all highlights
         mChart.highlightValues(null);
-
-        mChart.invalidate();
+        mChartView.invalidate();
     }
 
     @Override

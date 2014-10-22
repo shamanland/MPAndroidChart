@@ -24,18 +24,6 @@ public class ScatterChart extends BarLineChartBase<ScatterData> {
         CROSS, TRIANGLE, CIRCLE, SQUARE, CUSTOM
     }
 
-    public ScatterChart(Context context) {
-        super(context);
-    }
-
-    public ScatterChart(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public ScatterChart(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-    
     @Override
     protected void prepareContentRect() {
         if(isEmpty()) {

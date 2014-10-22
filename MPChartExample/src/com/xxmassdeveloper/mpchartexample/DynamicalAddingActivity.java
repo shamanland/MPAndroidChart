@@ -14,6 +14,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.view.ChartView;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
 import java.util.ArrayList;
@@ -29,7 +30,8 @@ public class DynamicalAddingActivity extends DemoBase implements OnChartValueSel
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_linechart_noseekbar);
 
-        mChart = (LineChart) findViewById(R.id.chart1);
+        mChartView = (ChartView) findViewById(R.id.chart1);
+        mChart = (LineChart) mChartView.getChart();
         mChart.setOnChartValueSelectedListener(this);
         mChart.setDrawYValues(false);
         mChart.setDrawGridBackground(false);
@@ -37,7 +39,7 @@ public class DynamicalAddingActivity extends DemoBase implements OnChartValueSel
         
         addEmptyData();
 
-        mChart.invalidate();
+        mChartView.invalidate();
     }
 
     int[] mColors = ColorTemplate.VORDIPLOM_COLORS;
@@ -62,7 +64,7 @@ public class DynamicalAddingActivity extends DemoBase implements OnChartValueSel
             mChart.notifyDataSetChanged();
 
             // redraw the chart
-            mChart.invalidate();   
+            mChartView.invalidate();
         }
     }
 
@@ -83,7 +85,7 @@ public class DynamicalAddingActivity extends DemoBase implements OnChartValueSel
                 // mData.removeEntry(xIndex, dataSetIndex);
 
                 mChart.notifyDataSetChanged();
-                mChart.invalidate();
+                mChartView.invalidate();
             }
         }
     }
@@ -114,7 +116,7 @@ public class DynamicalAddingActivity extends DemoBase implements OnChartValueSel
 
             data.addDataSet(set);
             mChart.notifyDataSetChanged();
-            mChart.invalidate();   
+            mChartView.invalidate();
         }
     }
 
@@ -127,7 +129,7 @@ public class DynamicalAddingActivity extends DemoBase implements OnChartValueSel
             data.removeDataSet(data.getDataSetByIndex(data.getDataSetCount() - 1));
 
             mChart.notifyDataSetChanged();
-            mChart.invalidate();   
+            mChartView.invalidate();
         }
     }
     
@@ -143,7 +145,7 @@ public class DynamicalAddingActivity extends DemoBase implements OnChartValueSel
         LineData data = new LineData(xVals);
 
         mChart.setData(data);
-        mChart.invalidate();
+        mChartView.invalidate();
     }
 
     @Override

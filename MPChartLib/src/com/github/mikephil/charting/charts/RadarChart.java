@@ -61,18 +61,6 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
     /** the object representing the x-axis labels */
     private XLabels mXLabels = new XLabels();
 
-    public RadarChart(Context context) {
-        super(context);
-    }
-
-    public RadarChart(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public RadarChart(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
     @Override
     protected void init() {
         super.init();
@@ -104,9 +92,7 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
         prepareXLabels();
     }
 
-
-    @Override
-    protected void onDraw(Canvas canvas) {
+    public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         if (mDataNotSet)

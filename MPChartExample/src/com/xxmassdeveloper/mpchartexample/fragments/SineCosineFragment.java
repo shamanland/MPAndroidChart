@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.YLabels;
+import com.github.mikephil.charting.view.ChartView;
 import com.xxmassdeveloper.mpchartexample.R;
 
 
@@ -18,14 +19,16 @@ public class SineCosineFragment extends SimpleFragment {
         return new SineCosineFragment();
     }
 
+    private ChartView mChartView;
     private LineChart mChart;
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.frag_simple_line, container, false);
         
-        mChart = (LineChart) v.findViewById(R.id.lineChart1);
-        
+        mChartView = (ChartView) v.findViewById(R.id.lineChart1);
+        mChart = (LineChart) mChartView.getChart();
+
         mChart.setDescription("");
         mChart.setDrawYValues(false);
 //        mChart.setCircleSize(5f);

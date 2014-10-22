@@ -84,18 +84,6 @@ public class PieChart extends PieRadarChartBase<PieData> {
      */
     private Paint mCenterTextPaint;
 
-    public PieChart(Context context) {
-        super(context);
-    }
-
-    public PieChart(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public PieChart(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
     @Override
     protected void init() {
         super.init();
@@ -122,8 +110,7 @@ public class PieChart extends PieRadarChartBase<PieData> {
         mDrawYValues = true;
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
+    public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         if (mDataNotSet)
@@ -702,8 +689,6 @@ public class PieChart extends PieRadarChartBase<PieData> {
     /**
      * sets the radius of the hole in the center of the piechart in percent of
      * the maximum radius (max = the radius of the whole chart), default 50%
-     * 
-     * @param size
      */
     public void setHoleRadius(final float percent) {
         mHoleRadiusPercent = percent;
