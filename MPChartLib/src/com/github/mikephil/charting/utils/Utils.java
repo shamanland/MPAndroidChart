@@ -6,6 +6,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewParent;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -374,5 +376,21 @@ public abstract class Utils {
         // Log.i(LOG_TAG, "Closest DataSet index: " + index);
 
         return index;
+    }
+
+    /**
+     * disables intercept touchevents
+     */
+    public static void disableScroll(View v) {
+        ViewParent parent = v.getParent();
+        parent.requestDisallowInterceptTouchEvent(true);
+    }
+
+    /**
+     * enables intercept touchevents
+     */
+    public static void enableScroll(View v) {
+        ViewParent parent = v.getParent();
+        parent.requestDisallowInterceptTouchEvent(false);
     }
 }

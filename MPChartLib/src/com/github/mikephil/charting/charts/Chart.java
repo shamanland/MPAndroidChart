@@ -20,6 +20,7 @@ import android.os.Looper;
 import android.provider.MediaStore.Images;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.github.mikephil.charting.data.BarData;
@@ -37,6 +38,7 @@ import com.github.mikephil.charting.utils.MarkerView;
 import com.github.mikephil.charting.utils.SelInfo;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ValueFormatter;
+import com.github.mikephil.charting.view.ChartView;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener;
@@ -45,6 +47,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -55,6 +58,8 @@ import java.util.ArrayList;
  */
 public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entry>>> implements AnimatorUpdateListener, View.OnTouchListener {
     public static final String LOG_TAG = "MPChart";
+
+    private WeakReference<ChartView> mChartView;
 
     /**
      * string that is drawn next to the values in the chart, indicating their
@@ -287,6 +292,29 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
         mDrawPaint = new Paint(Paint.DITHER_FLAG);
     }
 
+    public void onAttached(ChartView chartView) {
+        mChartView = new WeakReference<ChartView>(chartView);
+    }
+
+    public void onDetached() {
+        mChartView = null;
+    }
+
+    private ChartView getChartView() {
+        if (mChartView == null) {
+            return null;
+        }
+
+        return mChartView.get();
+    }
+
+    public void invalidate() {
+        ChartView view = getChartView();
+        if (view != null) {
+            view.invalidate();
+        }
+    }
+
     // public void initWithDummyData() {
     // ColorTemplate template = new ColorTemplate();
     // template.addColorsForDataSets(ColorTemplate.COLORFUL_COLORS,
@@ -367,8 +395,8 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
         mCurrentData = null;
         mOriginalData = null;
         mDataNotSet = true;
-        // FIXME
-        // invalidate();
+
+        invalidate();
     }
 
     /**
@@ -459,17 +487,21 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
         }
     }
 
-    /** flag that indicates if offsets calculation has already been done or not */
+    /**
+     * flag that indicates if offsets calculation has already been done or not
+     */
     private boolean mOffsetsCalculated = false;
 
     /**
      * Bitmap object used for drawing. This is necessary because hardware
      * acceleration uses OpenGL which only allows a specific texture size to be
      * drawn on the canvas directly.
-     **/
+     */
     protected Bitmap mDrawBitmap;
 
-    /** paint object used for drawing the bitmap */
+    /**
+     * paint object used for drawing the bitmap
+     */
     protected Paint mDrawPaint;
 
     private int mWidth;
@@ -650,7 +682,7 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
      * @return
      */
     protected float[] generateTransformedValuesBarChart(ArrayList<? extends Entry> entries,
-            int dataSet) {
+                                                        int dataSet) {
 
         float[] valuePoints = new float[entries.size() * 2];
 
@@ -978,7 +1010,7 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
                 posX = getWidth()
                         / 2f
                         - (mLegend.getMaximumEntryLength(mLegendLabelPaint) + mLegend
-                                .getXEntrySpace())
+                        .getXEntrySpace())
                         / 2f;
                 posY = getHeight() / 2f - mLegend.getFullHeight(mLegendLabelPaint) / 2f;
 
@@ -1088,9 +1120,7 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
         // set the indices to highlight
         mIndicesToHightlight = highs;
 
-        // redraw the chart
-        // FIXME
-        // invalidate();
+        invalidate();
     }
 
     /**
@@ -1107,7 +1137,7 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
 
             highlightValues(null);
         } else {
-            highlightValues(new Highlight[] {
+            highlightValues(new Highlight[]{
                     new Highlight(xIndex, dataSetIndex)
             });
         }
@@ -1125,14 +1155,13 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
         else {
 
             // set the indices to highlight
-            mIndicesToHightlight = new Highlight[] {
+            mIndicesToHightlight = new Highlight[]{
                     high
             };
         }
 
         // redraw the chart
-        // FIXME
-        // invalidate();
+        invalidate();
 
         if (mSelectionListener != null) {
 
@@ -1154,10 +1183,14 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
      */
     /** BELOW CODE IS FOR THE MARKER VIEW */
 
-    /** if set to true, the marker view is drawn when a value is clicked */
+    /**
+     * if set to true, the marker view is drawn when a value is clicked
+     */
     protected boolean mDrawMarkerViews = true;
 
-    /** the view that represents the marker */
+    /**
+     * the view that represents the marker
+     */
     protected MarkerView mMarkerView;
 
     /**
@@ -1235,13 +1268,13 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
             PointF p = new PointF((float) (c.x + val * Math.cos(Math.toRadians(angle))),
                     (float) (c.y + val * Math.sin(Math.toRadians(angle))));
 
-            return new float[] {
+            return new float[]{
                     p.x, p.y
             };
         }
 
         // position of the marker depends on selected value index and value
-        float[] pts = new float[] {
+        float[] pts = new float[]{
                 xPos, e.getVal() * mPhaseY
         };
 
@@ -1257,16 +1290,24 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
      */
     /** CODE BELOW THIS RELATED TO ANIMATION */
 
-    /** the phase that is animated and influences the drawn values on the y-axis */
+    /**
+     * the phase that is animated and influences the drawn values on the y-axis
+     */
     protected float mPhaseY = 1f;
 
-    /** the phase that is animated and influences the drawn values on the x-axis */
+    /**
+     * the phase that is animated and influences the drawn values on the x-axis
+     */
     protected float mPhaseX = 1f;
 
-    /** objectanimator used for animating values on y-axis */
+    /**
+     * objectanimator used for animating values on y-axis
+     */
     private ObjectAnimator mAnimatorY;
 
-    /** objectanimator used for animating values on x-axis */
+    /**
+     * objectanimator used for animating values on x-axis
+     */
     private ObjectAnimator mAnimatorX;
 
     /**
@@ -1758,24 +1799,24 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
         return mContentRect;
     }
 
-    public void disableScroll() {
-        // FIXME
-    }
-
-    public void enableScroll() {
-        // FIXME
-    }
-
-    /** paint for the grid lines (only line and barchart) */
+    /**
+     * paint for the grid lines (only line and barchart)
+     */
     public static final int PAINT_GRID = 3;
 
-    /** paint for the grid background (only line and barchart) */
+    /**
+     * paint for the grid background (only line and barchart)
+     */
     public static final int PAINT_GRID_BACKGROUND = 4;
 
-    /** paint for the y-legend values (only line and barchart) */
+    /**
+     * paint for the y-legend values (only line and barchart)
+     */
     public static final int PAINT_YLABEL = 5;
 
-    /** paint for the x-legend values (only line and barchart) */
+    /**
+     * paint for the x-legend values (only line and barchart)
+     */
     public static final int PAINT_XLABEL = 6;
 
     /**
@@ -1784,46 +1825,68 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
      */
     public static final int PAINT_INFO = 7;
 
-    /** paint for the value text */
+    /**
+     * paint for the value text
+     */
     public static final int PAINT_VALUES = 8;
 
-    /** paint for the inner circle (linechart) */
+    /**
+     * paint for the inner circle (linechart)
+     */
     public static final int PAINT_CIRCLES_INNER = 10;
 
-    /** paint for the description text in the bottom right corner */
+    /**
+     * paint for the description text in the bottom right corner
+     */
     public static final int PAINT_DESCRIPTION = 11;
 
-    /** paint for the line surrounding the chart (only line and barchart) */
+    /**
+     * paint for the line surrounding the chart (only line and barchart)
+     */
     public static final int PAINT_BORDER = 12;
 
-    /** paint for the hole in the middle of the pie chart */
+    /**
+     * paint for the hole in the middle of the pie chart
+     */
     public static final int PAINT_HOLE = 13;
 
-    /** paint for the text in the middle of the pie chart */
+    /**
+     * paint for the text in the middle of the pie chart
+     */
     public static final int PAINT_CENTER_TEXT = 14;
 
-    /** paint for highlightning the values of a linechart */
+    /**
+     * paint for highlightning the values of a linechart
+     */
     public static final int PAINT_HIGHLIGHT = 15;
 
-    /** paint object used for the limit lines */
+    /**
+     * paint object used for the limit lines
+     */
     public static final int PAINT_RADAR_WEB = 16;
 
-    /** paint used for all rendering processes */
+    /**
+     * paint used for all rendering processes
+     */
     public static final int PAINT_RENDER = 17;
 
-    /** paint used for the legend */
+    /**
+     * paint used for the legend
+     */
     public static final int PAINT_LEGEND_LABEL = 18;
 
-    /** paint object used for the limit lines */
+    /**
+     * paint object used for the limit lines
+     */
     public static final int PAINT_LIMIT_LINE = 19;
 
     /**
      * set a new paint object for the specified parameter in the chart e.g.
      * Chart.PAINT_VALUES
      *
-     * @param p the new paint object
+     * @param p     the new paint object
      * @param which Chart.PAINT_VALUES, Chart.PAINT_GRID, Chart.PAINT_VALUES,
-     *            ...
+     *              ...
      */
     public void setPaint(Paint p, int which) {
 
@@ -2223,7 +2286,7 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
      * compression (high quality). NOTE: Needs permission WRITE_EXTERNAL_STORAGE
      *
      * @param fileName e.g. "my_image"
-     * @param quality e.g. 50, min = 0, max = 100
+     * @param quality  e.g. 50, min = 0, max = 100
      * @return returns true if saving was successfull, false if not
      */
     public boolean saveToGallery(String fileName, int quality) {
@@ -2305,7 +2368,9 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
      */
     private class DefaultValueFormatter implements ValueFormatter {
 
-        /** decimalformat for formatting */
+        /**
+         * decimalformat for formatting
+         */
         private DecimalFormat mFormat;
 
         public DefaultValueFormatter(DecimalFormat f) {
@@ -2410,6 +2475,11 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
      */
     public boolean isFilteringEnabled() {
         return mFilterData;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return false;
     }
 
     // TODO

@@ -14,6 +14,7 @@ import com.github.mikephil.charting.interfaces.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.SelInfo;
 import com.github.mikephil.charting.utils.Utils;
+import com.github.mikephil.charting.view.ChartView;
 
 import java.util.ArrayList;
 
@@ -65,16 +66,15 @@ public class PieRadarChartTouchListener extends SimpleOnGestureListener implemen
                     if (mTouchMode == NONE && distance(x, mTouchStartPoint.x, y, mTouchStartPoint.y) 
                             > Utils.convertDpToPixel(8f)) {
                         mTouchMode = ROTATE;
-                        mChart.disableScroll();
+                        Utils.disableScroll(v);
                     } else if (mTouchMode == ROTATE) {
                         mChart.updateRotation(x, y);
-                        // FIXME
-                        // mChart.invalidate();
+                        mChart.invalidate();
                     }
 
                     break;
                 case MotionEvent.ACTION_UP:
-                    mChart.enableScroll();
+                    Utils.enableScroll(v);
                     mTouchMode = NONE;
                     break;
             }

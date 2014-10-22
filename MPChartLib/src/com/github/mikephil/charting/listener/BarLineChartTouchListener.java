@@ -66,8 +66,8 @@ public class BarLineChartTouchListener<T extends BarLineChartBase<? extends BarL
     private GestureDetector mGestureDetector;
 
     public BarLineChartTouchListener(T chart, Matrix start) {
-        this.mChart = chart;
-        this.mMatrix = start;
+        mChart = chart;
+        mMatrix = start;
 
         mGestureDetector = new GestureDetector(Utils.getContext(), this);
     }
@@ -93,8 +93,7 @@ public class BarLineChartTouchListener<T extends BarLineChartBase<? extends BarL
             case MotionEvent.ACTION_POINTER_DOWN:
 
                 if (event.getPointerCount() >= 2) {
-
-                    mChart.disableScroll();
+                    Utils.disableScroll(v);
 
                     saveTouchStart(event);
 
@@ -126,15 +125,13 @@ public class BarLineChartTouchListener<T extends BarLineChartBase<? extends BarL
             case MotionEvent.ACTION_MOVE:
 
                 if (mTouchMode == DRAG) {
-
-                    mChart.disableScroll();
+                    Utils.disableScroll(v);
 
                     if (mChart.isDragEnabled())
                         performDrag(event);
 
                 } else if (mTouchMode == X_ZOOM || mTouchMode == Y_ZOOM || mTouchMode == PINCH_ZOOM) {
-
-                    mChart.disableScroll();
+                    Utils.disableScroll(v);
 
                     if (mChart.isScaleEnabled())
                         performZoom(event);
@@ -156,7 +153,7 @@ public class BarLineChartTouchListener<T extends BarLineChartBase<? extends BarL
 
             case MotionEvent.ACTION_UP:
                 mTouchMode = NONE;
-                mChart.enableScroll();
+                Utils.enableScroll(v);
                 break;
             case MotionEvent.ACTION_POINTER_UP:
                 mTouchMode = POST_ZOOM;

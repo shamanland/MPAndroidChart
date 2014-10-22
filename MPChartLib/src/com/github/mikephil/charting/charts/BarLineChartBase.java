@@ -34,6 +34,7 @@ import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
 import com.github.mikephil.charting.utils.YLabels;
 import com.github.mikephil.charting.utils.YLabels.YLabelPosition;
+import com.github.mikephil.charting.view.ChartView;
 
 import java.util.ArrayList;
 
@@ -1178,8 +1179,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
         limitTransAndScale(mMatrixTouch);
 
         // redraw
-        // FIXME
-        // invalidate();
+        invalidate();
 
         newTouchMatrix.set(mMatrixTouch);
         return newTouchMatrix;
@@ -1360,15 +1360,14 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
         calcFormats();
         prepareMatrix();
         if (invalidate) {
-            // FIXME
-            // invalidate();
+            invalidate();
         }
     }
 
     /**
      * Resets the previously set y range. If new data is added, the y-range will
      * be recalculated.
-     * 
+     *
      * @param invalidate if set to true, the chart will redraw itself after
      *            calling this method
      */
@@ -1378,8 +1377,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleData<? exte
 
         prepareMatrix();
         if (invalidate) {
-            // FIXME
-            // invalidate();
+            invalidate();
         }
     }
 

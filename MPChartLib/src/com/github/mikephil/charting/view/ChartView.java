@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewParent;
 
 import com.github.mikephil.charting.R;
 import com.github.mikephil.charting.charts.BarChart;
@@ -25,7 +25,15 @@ public class ChartView extends View {
     }
 
     public void setChart(Chart<?> chart) {
+        if (mChart != null) {
+            mChart.onDetached();
+        }
+
         mChart = chart;
+
+        if (mChart != null) {
+            mChart.onAttached(this);
+        }
     }
 
     public ChartView(Context context) {
@@ -82,22 +90,6 @@ public class ChartView extends View {
         }
     }
 
-    /**
-     * disables intercept touchevents
-     */
-    public void disableScroll() {
-        ViewParent parent = getParent();
-        parent.requestDisallowInterceptTouchEvent(true);
-    }
-
-    /**
-     * enables intercept touchevents
-     */
-    public void enableScroll() {
-        ViewParent parent = getParent();
-        parent.requestDisallowInterceptTouchEvent(false);
-    }
-
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         if (mChart != null) {
@@ -110,5 +102,14 @@ public class ChartView extends View {
         if (mChart != null) {
             mChart.onDraw(canvas);
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (mChart != null) {
+            return mChart.onTouch(this, event);
+        }
+
+        return super.onTouchEvent(event);
     }
 }
